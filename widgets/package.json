@@ -1,0 +1,37 @@
+{
+    "name": "widgets",
+    "private": true,
+    "version": "0.0.0",
+    "type": "module",
+    "scripts": {
+        "dev": "vite",
+        "build": "tsc -b && vite build",
+        "lint": "eslint .",
+        "preview": "vite preview",
+        "ladle": "ladle serve"
+    },
+    "dependencies": {
+        "@ladle/react": "^5.1.1",
+        "@modelcontextprotocol/ext-apps": "^1.7.4",
+        "@openai/apps-sdk-ui": "^0.2.2",
+        "@tailwindcss/vite": "^4.3.1",
+        "ladle": "^0.0.0",
+        "react": "^19.2.7",
+        "react-dom": "^19.2.7",
+        "tailwindcss": "^4.3.1"
+    },
+    "devDependencies": {
+        "@eslint/js": "^10.0.1",
+        "@types/node": "^25.9.3",
+        "@types/react": "^19.2.17",
+        "@types/react-dom": "^19.2.3",
+        "@vitejs/plugin-react": "^5.2.0",
+        "eslint": "^10.5.0",
+        "eslint-plugin-react-hooks": "^7.1.1",
+        "eslint-plugin-react-refresh": "^0.5.3",
+        "globals": "^17.6.0",
+        "typescript": "~6.0.3",
+        "typescript-eslint": "^8.61.0",
+        "vite": "^7.3.2"
+    }
+}
