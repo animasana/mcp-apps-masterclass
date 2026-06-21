@@ -4,25 +4,16 @@ import type { Card, Deck } from "../types";
 
 function saveState(viewUUID: string | null, state: object) {
     if (!viewUUID) return;
-    try {
-        localStorage.setItem(viewUUID, JSON.stringify(state));
-    } catch (err) {
-        console.error("Failed to save view state:", err);
-    }
+    localStorage.setItem(viewUUID, JSON.stringify(state));
 }
 
 function loadState(viewUUID: string | null) {
     if (!viewUUID) return null;
-    try {
-        const state = localStorage.getItem(viewUUID);
-        if (!state) {
-            return null;
-        }
-        return JSON.parse(state);
-    } catch (err) {
-        console.error("Failed to load view state:", err);
+    const state = localStorage.getItem(viewUUID);
+    if (!state) {
         return null;
     }
+    return JSON.parse(state);
 }
 
 export function useStudySession({
@@ -40,10 +31,10 @@ export function useStudySession({
     const [currentIndex, setCurrentIndex] = useState(
         savedState ? savedState.currentIndex : 0,
     );
-    const [isFlipped, setIsFlipped] = useState(false);
     const [cards, setCards] = useState<Card[]>(
         savedState ? savedState.cards : deck.cards,
     );
+    const [isFlipped, setIsFlipped] = useState(false);
     const [loading, setLoading] = useState<string | null>(null);
 
     const currentCard = cards[currentIndex];
@@ -140,7 +131,7 @@ export function useStudySession({
                 status: "new" as const,
             }));
             setCards(resetCards);
-            saveState(viewUUID, {currentIndex: 0, cards: resetCards });
+            saveState(viewUUID, { currentIndex: 0, cards: resetCards });
             setCurrentIndex(0);
             setIsFlipped(false);
         } finally {
