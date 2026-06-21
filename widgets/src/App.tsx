@@ -1,26 +1,52 @@
 import { useApp, useHostStyles } from "@modelcontextprotocol/ext-apps/react";
 import { LoadingIndicator } from "@openai/apps-sdk-ui/components/Indicator";
 import { useState } from "react";
-
+import type { ToolOutput } from "./types";
+import { DeckList } from "./components/deck-list";
+import { FlashcardStudy } from "./components/flashcard-study";
 
 function App() {
-    const [toolOutput, setToolOutput] = useState<object | null>(null);
-    
-    const { app } = useApp({        
+    const [toolOutput, setToolOutput] = useState<ToolOutput | null>(null);
+
+    const { app, error } = useApp({
         appInfo: { name: "Flashcards Client", version: "1.0" },
         capabilities: {},
         onAppCreated: (app) => {
             app.ontoolresult = (result) => {
                 if (result.structuredContent) {
-                    setToolOutput(result.structuredContent);
+                    setToolOutput(
+                        result.structuredContent as unknown as ToolOutput,
+                    );
                 }
-            }                
+            };
         },
     });
 
-    useHostStyles(app, app?.getHostContext())
+    useHostStyles(app, app?.getHostContext());
 
-    console.log(toolOutput);
+    if (error) {
+        return (
+            <div className="flex items-center justify-center min-h-50 text-red-500">
+                Error: {error.message}
+            </div>
+        );
+    }
+
+    if (toolOutput && "decks" in toolOutput) {
+        return <DeckList decks={toolOutput.decks} />;
+    }
+
+    if (toolOutput && "deck" in toolOutput) {
+        return (
+            <FlashcardStudy
+                deck={toolOutput.deck}
+                app={app}
+                username={
+                    "username" in toolOutput ? toolOutput.username : "anonymous"
+                }
+            />
+        );
+    }
 
     return (
         <div className="items-center justify-center flex min-h-50">
