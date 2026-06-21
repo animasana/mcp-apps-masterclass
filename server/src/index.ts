@@ -29,7 +29,39 @@ export default {
 			version: '1.0',
 		});
 
-		await env.FLASHCARDS_KV.put('Hello', ', World!');
+		registerAppResource(
+			server,
+			'Flashcards Widget',
+			WIDGET_URI,
+			{
+				description: 'Flashcards widget',
+			},
+			async () => {
+				const html = await env.ASSETS.fetch(new URL('http://hello/index.html'));
+				return {
+					contents: [
+						{
+							uri: WIDGET_URI,
+							text: await html.text(),
+							mimeType: RESOURCE_MIME_TYPE,
+							_meta: {
+								ui: {
+									csp: {
+										connectDomains: ['https://*.workers.dev'],
+										resourceDomains: [
+											'https://*.workers.dev',
+											'https://fonts.googleapis.com',
+											'https://fonts.gstatic.com',
+											'https://image.tmdb.org',
+										],
+									},
+								},
+							},
+						},
+					],
+				};
+			},
+		);
 
 		// create deck
 		registerAppTool(
@@ -354,41 +386,6 @@ export default {
 						{
 							type: 'text',
 							text: `Deck deleted`,
-						},
-					],
-				};
-			},
-		);
-
-		registerAppResource(
-			server,
-			'Flashcards Widget',
-			WIDGET_URI,
-			{
-				description: 'Flashcards widget',
-			},
-			async () => {
-				const html = await env.ASSETS.fetch(new URL('http://your-sexy-worker.com/index.html'));
-
-				return {
-					contents: [
-						{
-							uri: WIDGET_URI,
-							text: await html.text(),
-							mimeType: RESOURCE_MIME_TYPE,
-							_meta: {
-								ui: {
-									csp: {
-										connectDomains: ['https://*.workers.dev'],
-										resourceDomains: [
-											'https://*.workers.dev',
-											'https://fonts.googleapis.com',
-											'https://fonts.gstatic.com',
-											'https://image.tmdb.org',
-										],
-									},
-								},
-							},
 						},
 					],
 				};
