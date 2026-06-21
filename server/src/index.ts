@@ -31,7 +31,7 @@ export default {
 				description: 'Movies widget',
 			},
 			async () => {
-				const html = await env.ASSETS.fetch(new URL('http://your-sexy-worker.com/index.html'));
+				const html = await env.ASSETS.fetch(new URL('http://hello/index.html'));
 
 				return {
 					contents: [
