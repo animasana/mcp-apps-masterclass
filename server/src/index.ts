@@ -14,17 +14,57 @@ const cardSchema = z.object({
 	status: z.enum(['new', 'learning', 'mastered']).readonly().default('new'),
 });
 
+const inputCardSchema = cardSchema.omit({ id: true, status: true });
+
 const deckSchema = z.object({
 	title: z.string().describe("The title of the deck e.g 'React Fundamentals'"),
 	description: z.string().describe('Brief description of what this deck covers.'),
-	cards: z.array(cardSchema).min(10).max(20).describe('Array of flashcards (aim for 20.)'),
+	cards: z.array(inputCardSchema).min(10).max(20).describe('Array of flashcards (aim for 20.)'),
 });
 
-type Deck = z.infer<typeof deckSchema>;
+const savedDeckSchema = z.object({
+	id: z.string(),
+	title: z.string(),
+	description: z.string(),
+	cards: z.array(cardSchema),
+	createdAt: z.string(),
+});
+
+const deckSummarySchema = savedDeckSchema.extend({
+	masteredCount: z.number(),
+});
+
+const createDeckOutputSchema = z.object({
+	deck: savedDeckSchema,
+	username: z.string(),
+});
+
+const listDecksOutputSchema = z.object({
+	decks: z.array(deckSummarySchema),
+	username: z.string(),
+});
+
+const openDeckOutputSchema = z.object({
+	deck: savedDeckSchema,
+	username: z.string(),
+	deckId: z.string(),
+});
+
+const deckUpdateOutputSchema = z.object({
+	deck: savedDeckSchema,
+});
+
+type Deck = z.infer<typeof savedDeckSchema>;
 type Card = z.infer<typeof cardSchema>;
 
 export default {
 	async fetch(request, env, ctx): Promise<Response> {
+		const url = new URL(request.url);
+
+		if (url.pathname !== '/mcp') {
+			return env.ASSETS.fetch(request);
+		}
+
 		const server = new McpServer({
 			name: 'Flashcards2 Server',
 			version: '1.0',
@@ -76,6 +116,7 @@ export default {
 					username: z.string().describe("The user's username. Ask for this before using the tool."),
 					deck: deckSchema,
 				},
+				outputSchema: createDeckOutputSchema,
 				annotations: {
 					readOnlyHint: false,
 				},
@@ -135,6 +176,7 @@ export default {
 				inputSchema: {
 					username: z.string().describe("The user's username. Ask for this before using the tool."),
 				},
+				outputSchema: listDecksOutputSchema,
 				annotations: {
 					readOnlyHint: true,
 				},
@@ -157,7 +199,7 @@ export default {
 								type: 'text',
 							},
 						],
-						structuredContent: { decks: [] },
+						structuredContent: { decks: [], username },
 					};
 				}
 
@@ -197,6 +239,7 @@ export default {
 					username: z.string().describe("The user's username. Ask for this before using the tool."),
 					deckId: z.string().describe('The ID of the deck. You can get it using the `list-decks` tool'),
 				},
+				outputSchema: openDeckOutputSchema,
 				annotations: {
 					readOnlyHint: true,
 				},
@@ -219,7 +262,7 @@ export default {
 								type: 'text',
 							},
 						],
-						structuredContent: { decks: [] },
+						isError: true,
 					};
 				}
 
@@ -251,6 +294,7 @@ export default {
 					status: z.enum(['learning', 'mastered']),
 					cardId: z.string(),
 				},
+				outputSchema: deckUpdateOutputSchema,
 				annotations: {
 					readOnlyHint: false,
 				},
@@ -308,6 +352,7 @@ export default {
 					username: z.string(),
 					deckId: z.string(),
 				},
+				outputSchema: deckUpdateOutputSchema,
 				annotations: {
 					destructiveHint: true,
 				},

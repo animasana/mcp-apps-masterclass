@@ -2,7 +2,7 @@ import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 import tailwindcss from "@tailwindcss/vite";
 
-const FULL_URL = "https://flashcards2-server.oogy.workers.dev/";
+const FULL_URL = "https://flashcards3-server.oogy.workers.dev/";
 
 // https://vite.dev/config/
 export default defineConfig(({ mode }) => {

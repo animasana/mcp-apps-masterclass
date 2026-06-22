@@ -5,6 +5,53 @@ import type { ToolOutput } from "./types";
 import { DeckList } from "./components/deck-list";
 import { FlashcardStudy } from "./components/flashcard-study";
 
+type ToolResultLike = {
+    structuredContent?: unknown;
+    content?: Array<{ type?: string; text?: string }>;
+    _meta?: Record<string, unknown>;
+    params?: ToolResultLike;
+};
+
+function normalizeToolResult(result: ToolResultLike): ToolResultLike {
+    return result.params ?? result;
+}
+
+function parseToolOutputFromText(result: ToolResultLike): ToolOutput | null {
+    const text = result.content?.find((item) => item.type === "text")?.text;
+    if (!text) return null;
+
+    if (text === "You have no decks" || text === "Deck not found") {
+        return { decks: [], username: "anonymous" };
+    }
+
+    const jsonStart = Math.min(
+        ...["{", "["]
+            .map((token) => text.indexOf(token))
+            .filter((index) => index >= 0),
+    );
+
+    if (!Number.isFinite(jsonStart)) return null;
+
+    try {
+        const parsed = JSON.parse(text.slice(jsonStart));
+        if (Array.isArray(parsed)) {
+            return { decks: parsed, username: "anonymous" };
+        }
+        if (parsed && typeof parsed === "object") {
+            if ("cards" in parsed) {
+                return { deck: parsed, username: "anonymous" } as ToolOutput;
+            }
+            if ("deck" in parsed || "decks" in parsed) {
+                return parsed as ToolOutput;
+            }
+        }
+    } catch {
+        return null;
+    }
+
+    return null;
+}
+
 function App() {
     const [toolOutput, setToolOutput] = useState<ToolOutput | null>(null);
     const [viewUUID, setViewUUID] = useState<string | null>(null);
@@ -14,13 +61,18 @@ function App() {
         capabilities: {},
         onAppCreated: (app) => {
             app.ontoolresult = (result) => {
-                if (result.structuredContent) {
-                    setToolOutput(
-                        result.structuredContent as unknown as ToolOutput,
-                    );
+                const toolResult = normalizeToolResult(
+                    result as unknown as ToolResultLike,
+                );
+                const output =
+                    toolResult.structuredContent ??
+                    parseToolOutputFromText(toolResult);
+
+                if (output) {
+                    setToolOutput(output as ToolOutput);
                 }
-                if (result._meta) {
-                    setViewUUID(result._meta.viewUUID as unknown as string);
+                if (toolResult._meta) {
+                    setViewUUID(toolResult._meta.viewUUID as string);
                 }
             };
         },
