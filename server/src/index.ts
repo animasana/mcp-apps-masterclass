@@ -262,7 +262,7 @@ export default {
 								type: 'text',
 							},
 						],
-						isError: true,
+						structuredContent: { deck, username, deckId },
 					};
 				}
 
