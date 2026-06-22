@@ -10,7 +10,7 @@ function App() {
     const [viewUUID, setViewUUID] = useState<string | null>(null);
 
     const { app, error } = useApp({
-        appInfo: { name: "Flashcards Client", version: "1.0" },
+        appInfo: { name: "Flashcards2 Client", version: "1.0" },
         capabilities: {},
         onAppCreated: (app) => {
             app.ontoolresult = (result) => {

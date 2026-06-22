@@ -2,7 +2,7 @@ import { registerAppResource, registerAppTool, RESOURCE_MIME_TYPE } from '@model
 import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import { createMcpHandler } from 'agents/mcp';
 import z from 'zod';
-import crypto from "node:crypto";
+import crypto from 'node:crypto';
 
 const WIDGET_URI = 'ui://flashcards-widget';
 
@@ -26,16 +26,16 @@ type Card = z.infer<typeof cardSchema>;
 export default {
 	async fetch(request, env, ctx): Promise<Response> {
 		const server = new McpServer({
-			name: 'Flashcards Server',
+			name: 'Flashcards2 Server',
 			version: '1.0',
 		});
 
 		registerAppResource(
 			server,
-			'Flashcards Widget',
+			'Flashcards2 Widget',
 			WIDGET_URI,
 			{
-				description: 'Flashcards widget',
+				description: 'Flashcards2 widget',
 			},
 			async () => {
 				const html = await env.ASSETS.fetch(new URL('http://hello/index.html'));
@@ -233,7 +233,7 @@ export default {
 					structuredContent: { deck, username, deckId },
 					_meta: {
 						viewUUID: crypto.randomUUID(),
-					}
+					},
 				};
 			},
 		);
