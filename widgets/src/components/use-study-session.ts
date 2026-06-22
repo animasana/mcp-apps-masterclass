@@ -58,7 +58,6 @@ export function useStudySession({
 
     function toggleFlip() {
         setIsFlipped((flipped) => !flipped);
-        saveState(viewUUID, {});
     }
 
     const markCard = async (status: "learning" | "mastered") => {
