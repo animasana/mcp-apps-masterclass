@@ -13,8 +13,8 @@ export default defineConfig(({ mode }) => {
             outDir: "../server/dist",
             emptyOutDir: true,
         },
-        server: {
-            cors: true,
-        },
+        // server: {
+        //     cors: true,
+        // },
     };
 });
