@@ -7,14 +7,12 @@
         "dev": "vite",
         "build": "tsc -b && vite build",
         "lint": "eslint .",
-        "preview": "vite preview",
-        "ladle": "ladle serve"
+        "preview": "vite preview"
     },
     "dependencies": {
         "@modelcontextprotocol/ext-apps": "^1.7.4",
         "@openai/apps-sdk-ui": "^0.2.2",
         "@tailwindcss/vite": "^4.3.1",
-        "ladle": "^0.0.0",
         "react": "^19.2.7",
         "react-dom": "^19.2.7",
         "tailwindcss": "^4.3.1"
