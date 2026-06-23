@@ -26,16 +26,16 @@ type Card = z.infer<typeof cardSchema>;
 export default {
 	async fetch(request, env, ctx): Promise<Response> {
 		const server = new McpServer({
-			name: 'Flashcards2 Server',
-			version: '1.0',
+			name: 'Flashcards Server',
+			version: '1.1',
 		});
 
 		registerAppResource(
 			server,
-			'Flashcards2 Widget',
+			'Flashcards Widget',
 			WIDGET_URI,
 			{
-				description: 'Flashcards2 widget',
+				description: 'Flashcards widget',
 			},
 			async () => {
 				const html = await env.ASSETS.fetch(new URL('http://hello/index.html'));
@@ -53,7 +53,7 @@ export default {
 											'https://*.workers.dev',
 											'https://fonts.googleapis.com',
 											'https://fonts.gstatic.com',
-											'https://image.tmdb.org',
+											
 										],
 									},
 								},
@@ -219,7 +219,7 @@ export default {
 								type: 'text',
 							},
 						],
-						structuredContent: { decks: [] },
+						structuredContent: { decks: [] as Deck[] },
 					};
 				}
 
