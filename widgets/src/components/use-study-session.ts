@@ -2,14 +2,14 @@
 import type { App } from "@modelcontextprotocol/ext-apps/react";
 import type { Card, Deck } from "../types";
 
-function saveState(viewUUID: string | null, state: object) {
-    if (!viewUUID) return;
-    localStorage.setItem(viewUUID, JSON.stringify(state));
+function saveState(key: string | null, state: object) {
+    if (!key) return;
+    localStorage.setItem(key, JSON.stringify(state));
 }
 
-function loadState(viewUUID: string | null) {
-    if (!viewUUID) return null;
-    const state = localStorage.getItem(viewUUID);
+function loadState(key: string | null) {
+    if (!key) return null;
+    const state = localStorage.getItem(key);
     if (!state) {
         return null;
     }
