@@ -8,19 +8,24 @@
     "dev": "wrangler dev",
     "start": "wrangler dev",
     "test": "vitest",
-    "cf-typegen": "wrangler types"
+    "cf-typegen": "wrangler types",
+    "db:generate": "drizzle-kit generate",
+    "db:migrate:local": "wrangler d1 migrations apply workouts_database",
+    "db:migrate:remote": "wrangler d1 migrations apply workouts_database --remote"
   },
   "devDependencies": {
-    "@cloudflare/vitest-pool-workers": "^0.16.18",
-    "@types/node": "^26.0.0",
+    "@cloudflare/vitest-pool-workers": "^0.16.19",
+    "@types/node": "^26.0.1",
+    "drizzle-kit": "^0.31.10",
     "typescript": "^6.0.3",
     "vitest": "~4.1.9",
-    "wrangler": "^4.103.0"
+    "wrangler": "^4.104.0"
   },
   "dependencies": {
     "@modelcontextprotocol/ext-apps": "^1.7.4",
     "@modelcontextprotocol/sdk": "^1.29.0",
     "agents": "^0.16.2",
+    "drizzle-orm": "^0.45.2",
     "zod": "^4.4.3"
   }
 }

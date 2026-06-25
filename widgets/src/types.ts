@@ -1,55 +1,28 @@
-﻿export interface Card {
-    id: string;
-    front: string;
-    back: string;
-    hint: string;
-    status: "new" | "learning" | "mastered";
+export interface Exercise {
+  name: string;
+  reps: number;
+  instructions: string;
+  searchKeyword: string;
 }
 
-export interface Deck {
-    id: string;
-    title: string;
-    description: string;
-    cards: Card[];
-    createdAt: string;
+export interface Workout {
+  id: string;
+  userId: string;
+  title: string;
+  description: string | null;
+  durationMinutes: number;
+  intervalSeconds: number;
+  exercises: Exercise[];
+  exerciseCount: number;
+  createdAt: string | null;
 }
 
-export interface DeckSummary extends Deck {
-    masteredCount: number;
+export interface WorkoutListItem {
+  id: string;
+  title: string;
+  description: string | null;
+  durationMinutes: number;
+  exerciseCount: number;
 }
 
-// structuredContent from create-deck
-export interface CreateDeckOutput {
-    deck: Deck;
-    username: string;
-}
-
-// structuredContent from list-decks
-export interface ListDecksOutput {
-    decks: DeckSummary[];
-    username: string;
-}
-
-// structuredContent from open-deck
-export interface OpenDeckOutput {
-    deck: Deck;
-    username: string;
-    deckId: string;
-}
-
-// structuredContent from mark-card
-export interface MarkCardOutput {
-    deck: Deck;
-}
-
-// structuredContent from reset-deck
-export interface ResetDeckOutput {
-    deck: Deck;
-}
-
-export type ToolOutput =
-    | CreateDeckOutput
-    | ListDecksOutput
-    | OpenDeckOutput
-    | MarkCardOutput
-    | ResetDeckOutput;
+export type ToolOutput = { workout: Workout } | { workouts: WorkoutListItem[] };
