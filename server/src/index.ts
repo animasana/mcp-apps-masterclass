@@ -171,7 +171,7 @@ export default {
 
 				const [result] = await db.select().from(workouts).where(eq(workouts.id, workoutId)).limit(1);
 
-				if (!result) {
+				if (result === undefined) {
 					return {
 						content: [{ type: 'text', text: 'Workout not found.' }],
 						isError: true,
@@ -235,7 +235,7 @@ export default {
 
 				const [result] = await db.select().from(workouts).where(eq(workouts.id, workoutId)).limit(1);
 
-				if (!result) {
+				if (result === undefined) {
 					return {
 						content: [{ type: 'text', text: 'Workout not found' }],
 						isError: true,

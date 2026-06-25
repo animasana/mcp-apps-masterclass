@@ -85,7 +85,7 @@ export function WorkoutSession({
             content: [
                 {
                     type: "text",
-                    text: `The user has completed ${currentRound} rounds of ${totalRounds} of the workout ${JSON.stringify(workout)}`,
+                    text: `The user has completed ${currentRound} round of ${totalRounds} of the workout ${JSON.stringify(workout)}`,
                 },
             ],
         });
