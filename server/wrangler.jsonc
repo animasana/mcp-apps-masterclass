@@ -11,24 +11,29 @@
 		"enabled": true,
 	},
 	"upload_source_maps": true,
-	"compatibility_flags": ["nodejs_compat"],
+	"compatibility_flags": [
+		"nodejs_compat"
+	],
 	"assets": {
 		"directory": "dist",
 		"binding": "ASSETS",
 	},
 	"d1_databases": [
 		{
-			"binding": "workouts_database",
-			"database_name": "workouts_database",
-			"database_id": "763f207a-7221-464a-8e2f-b1aaccd2a22d",
+			"binding": "DB",
+			"database_name": "ecommerce_database",
+			"database_id": "bb33a065-5859-4da8-a583-013a2a28ec39",
 			"remote": true,
 			"migrations_dir": "drizzle",
 		},
+	],	
+	"kv_namespaces": [
+		{
+			"binding": "OAUTH_KV",
+			"id": "3d3a193af1dc45df8c0a6503a3c53b90",
+			"remote": true
+		}
 	],
-	"ai": {
-		"binding": "AI",
-		"remote": true,
-	},
 	/**
 	 * Smart Placement
 	 * https://developers.cloudflare.com/workers/configuration/smart-placement/#smart-placement
