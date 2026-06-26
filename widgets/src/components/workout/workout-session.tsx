@@ -11,16 +11,18 @@ import {
     Expand,
 } from "@openai/apps-sdk-ui/components/Icon";
 import type { Workout } from "../../types";
-import type { App } from "@modelcontextprotocol/ext-apps";
+import type { App, McpUiDisplayMode } from "@modelcontextprotocol/ext-apps";
 
 export function WorkoutSession({
     workout,
     onClose,
     app,
+    displayMode,
 }: {
     workout: Workout;
     onClose: () => void;
     app: App | null;
+    displayMode: McpUiDisplayMode;
 }) {
     const totalRounds = Math.floor(
         (workout.durationMinutes * 60) / workout.intervalSeconds,
@@ -78,9 +80,9 @@ export function WorkoutSession({
         setCurrentRound((r) => r + 1);
         setCurrentExerciseIndex((i) => (i + 1) % workout.exercises.length);
         setTimeRemaining(workout.intervalSeconds);
-        
-        if (!app) return;    
-        
+
+        if (!app) return;
+
         await app.updateModelContext({
             content: [
                 {
@@ -116,6 +118,11 @@ export function WorkoutSession({
         const secs = seconds % 60;
         return `${mins.toString().padStart(2, "0")}:${secs.toString().padStart(2, "0")}`;
     }
+
+    const onFullScreenClick = async () => {
+        if (!app) return;
+        await app.requestDisplayMode({ mode: "fullscreen" });
+    };
 
     // Completed screen
     if (isComplete) {
@@ -220,12 +227,19 @@ export function WorkoutSession({
             </div>
 
             {/* TODO: Add fullscreen button using app.requestDisplayMode */}
-            <div className="flex justify-center gap-3 mb-3">
-                <Button size="md" color="secondary" variant="ghost">
-                    <Expand className="w-4 h-4" />
-                    <span className="ml-1">Fullscreen</span>
-                </Button>
-            </div>
+            {displayMode === "fullscreen" ? null : (
+                <div className="flex justify-center gap-3 mb-3">
+                    <Button
+                        size="md"
+                        color="secondary"
+                        variant="ghost"
+                        onClick={onFullScreenClick}
+                    >
+                        <Expand className="w-4 h-4" />
+                        <span className="ml-1">Fullscreen</span>
+                    </Button>
+                </div>
+            )}
 
             {/* Controls */}
             <div className="flex justify-center gap-3">

@@ -1,6 +1,6 @@
-import { useApp, useHostStyles } from "@modelcontextprotocol/ext-apps/react";
+import { applyDocumentTheme, applyHostStyleVariables, type McpUiDisplayMode, useApp, useHostStyles } from "@modelcontextprotocol/ext-apps/react";
 import { LoadingIndicator } from "@openai/apps-sdk-ui/components/Indicator";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { WorkoutList } from "./components/workout/workout-list";
 import { WorkoutDetail } from "./components/workout/workout-detail";
 import { WorkoutSession } from "./components/workout/workout-session";
@@ -9,12 +9,18 @@ import type { ToolOutput } from "./types";
 function App() {
     const [toolOutput, setToolOutput] = useState<ToolOutput | null>(null);
     const [showSession, setShowSession] = useState(false);
+    const [displayMode, setDisplayMode] = useState<McpUiDisplayMode>("inline");
 
     const { app } = useApp({
         appInfo: { name: "EMOM Workout App", version: "1.0" },
         capabilities: {},
         onAppCreated: (app) => {
             // TODO: safeAreaInsets and displayMode
+            app.onhostcontextchanged = (ctx) => {
+                if (ctx.displayMode) {
+                    setDisplayMode(ctx.displayMode);
+                }
+            };
 
             app.ontoolresult = (params) => {
                 if (params.structuredContent) {
@@ -23,6 +29,16 @@ function App() {
             };
         },
     });
+
+    useEffect(() => {
+        const ctx = app?.getHostContext();
+        if (ctx?.theme) {
+            applyDocumentTheme(ctx.theme);
+        }
+        if (ctx?.styles?.variables) {
+            applyHostStyleVariables(ctx.styles.variables);
+        }
+    }, [app]);
 
     useHostStyles(app, app?.getHostContext());
 
@@ -33,6 +49,7 @@ function App() {
                     workout={toolOutput.workout}
                     onClose={() => setShowSession(false)}
                     app={app}
+                    displayMode={displayMode}
                 />
             );
         }
