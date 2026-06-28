@@ -3,7 +3,7 @@ import { registerAppResource, registerAppTool, RESOURCE_MIME_TYPE } from '@model
 import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import { createMcpHandler } from 'agents/mcp';
 import z from 'zod';
-import handleAuthorizeGet from './lib/authorize';
+import { handleAuthorizeGet, handleAuthorizePost } from './lib/authorize';
 
 const WIDGET_URI = 'ui://ecommerce-widget';
 
@@ -225,14 +225,19 @@ const publicHandler = {
 		const url = new URL(request.url);
 
 		if (url.pathname === '/authorize') {
-			return handleAuthorizeGet(request, env);
+			if (request.method === 'GET') {
+				return handleAuthorizeGet(request, env);
+			}
+			if (request.method === 'POST') {
+				return handleAuthorizePost(request, env);
+			}
 		}
 		return new Response(null, { status: 404 });
 	},
 } satisfies ExportedHandler<Env>;
 
 export default new OAuthProvider({
-	defaultHandler: publicHandler,
+	defaultHandler: publicHandler,	
 	apiHandler: privateHandler,
 	apiRoute: ['/mcp'],
 	authorizeEndpoint: '/authorize',
