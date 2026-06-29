@@ -1,11 +1,11 @@
 {
   "version": "6",
   "dialect": "sqlite",
-  "id": "418daaed-e1ea-4296-8504-fbd571ad470f",
+  "id": "c00ff901-0869-459b-acff-d433dd201931",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "tables": {
-    "workouts": {
-      "name": "workouts",
+    "cart_items": {
+      "name": "cart_items",
       "columns": {
         "id": {
           "name": "id",
@@ -14,9 +14,73 @@
           "notNull": true,
           "autoincrement": false
         },
-        "title": {
-          "name": "title",
+        "user_id": {
+          "name": "user_id",
           "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "product_id": {
+          "name": "product_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "quantity": {
+          "name": "quantity",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "cart_items_product_id_products_id_fk": {
+          "name": "cart_items_product_id_products_id_fk",
+          "tableFrom": "cart_items",
+          "tableTo": "products",
+          "columnsFrom": [
+            "product_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "checkConstraints": {
+        "qtty_positive_only": {
+          "name": "qtty_positive_only",
+          "value": "\"cart_items\".\"quantity\" > 0"
+        }
+      }
+    },
+    "products": {
+      "name": "products",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "name": {
+          "name": "name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "price": {
+          "name": "price",
+          "type": "integer",
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false
@@ -28,47 +92,48 @@
           "notNull": true,
           "autoincrement": false
         },
-        "duration_minutes": {
-          "name": "duration_minutes",
-          "type": "integer",
+        "short_description": {
+          "name": "short_description",
+          "type": "text",
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false
         },
-        "interval_seconds": {
-          "name": "interval_seconds",
-          "type": "integer",
+        "detail_summary": {
+          "name": "detail_summary",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "nutrition_facts": {
+          "name": "nutrition_facts",
+          "type": "text",
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false,
-          "default": 60
+          "default": "'[]'"
         },
-        "exercise_count": {
-          "name": "exercise_count",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
-        },
-        "exercises": {
-          "name": "exercises",
+        "highlights": {
+          "name": "highlights",
           "type": "text",
           "primaryKey": false,
-          "notNull": false,
-          "autoincrement": false
+          "notNull": true,
+          "autoincrement": false,
+          "default": "'[]'"
         },
-        "user_id": {
-          "name": "user_id",
+        "image": {
+          "name": "image",
           "type": "text",
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false
         },
-        "created_at": {
-          "name": "created_at",
+        "category": {
+          "name": "category",
           "type": "text",
           "primaryKey": false,
-          "notNull": false,
+          "notNull": true,
           "autoincrement": false
         }
       },
@@ -77,6 +142,86 @@
       "compositePrimaryKeys": {},
       "uniqueConstraints": {},
       "checkConstraints": {}
+    },
+    "reviews": {
+      "name": "reviews",
+      "columns": {
+        "user_id": {
+          "name": "user_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "product_id": {
+          "name": "product_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "rating": {
+          "name": "rating",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "text": {
+          "name": "text",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "file_id": {
+          "name": "file_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false,
+          "default": "(current_timestamp)"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "reviews_product_id_products_id_fk": {
+          "name": "reviews_product_id_products_id_fk",
+          "tableFrom": "reviews",
+          "tableTo": "products",
+          "columnsFrom": [
+            "product_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {
+        "reviews_product_id_user_id_pk": {
+          "columns": [
+            "product_id",
+            "user_id"
+          ],
+          "name": "reviews_product_id_user_id_pk"
+        }
+      },
+      "uniqueConstraints": {},
+      "checkConstraints": {
+        "rating_1_5": {
+          "name": "rating_1_5",
+          "value": "\"reviews\".\"rating\" BETWEEN 1 AND 5"
+        }
+      }
     }
   },
   "views": {},

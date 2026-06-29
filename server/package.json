@@ -10,8 +10,8 @@
     "test": "vitest",
     "cf-typegen": "wrangler types",
     "db:generate": "drizzle-kit generate",
-    "db:migrate:local": "wrangler d1 migrations apply workouts_database",
-    "db:migrate:remote": "wrangler d1 migrations apply workouts_database --remote"
+    "db:migrate:local": "wrangler d1 migrations apply ecommerce_database",
+    "db:migrate:remote": "wrangler d1 migrations apply ecommerce_database --remote"
   },
   "devDependencies": {
     "@cloudflare/vitest-pool-workers": "^0.16.20",

@@ -4,6 +4,11 @@ import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import { createMcpHandler } from 'agents/mcp';
 import z from 'zod';
 import { handleAuthorizeGet, handleAuthorizePost } from './lib/authorize';
+import { and, eq, like, or } from 'drizzle-orm';
+import { cartItems, products, reviews } from './schema';
+import { drizzle } from 'drizzle-orm/d1';
+import { clearCart, getCartProducts, getProductById, getReviewsByProductId, modifyCart, searchProducts } from './queries';
+import { seedProducts } from './seed';
 
 const WIDGET_URI = 'ui://ecommerce-widget';
 
@@ -46,6 +51,22 @@ const privateHandler = {
 			};
 		});
 
+		// Tool: Who am i?
+		server.registerTool(
+			'whoami',
+			{
+				title: 'whoami',
+				description: 'tell the user who they are logged in as.',
+				inputSchema: {},
+				annotations: { readOnlyHint: true },
+			},
+			async () => {
+				return {
+					content: [{ type: 'text', text: `You are logged in as ${JSON.stringify(props)}` }],
+				};
+			},
+		);
+
 		// Tool: Search Products (model only, no UI — data tool for looking up product IDs)
 		server.registerTool(
 			'search-products',
@@ -54,30 +75,16 @@ const privateHandler = {
 				description:
 					'Search products by name or category. Returns product data without showing a widget. Use this to look up product IDs before calling add-to-cart or get-product.',
 				inputSchema: {
-					query: z.string().optional().describe('Search by product name or description'),
+					query: z.string().toLowerCase().optional().describe('Search by product name or description'),
 					category: z.string().optional().describe('Filter by category: pizza, protein, produce'),
 				},
 				annotations: { readOnlyHint: true },
 			},
 			async ({ query, category }) => {
-				return {
-					content: [{ type: 'text', text: 'Not implemented' }],
-				};
-			},
-		);
+				const data = await searchProducts(env.DB, query, category);
 
-		server.registerTool(
-			'whoami',
-			{
-				title: 'whoami',
-				description:
-					'tell the user who they are logged in as.',
-				inputSchema: {},
-				annotations: { readOnlyHint: true },
-			},
-			async () => {
 				return {
-					content: [{ type: 'text', text: `You are logged in as ${JSON.stringify(props)}` }],
+					content: [{ type: 'text', text: JSON.stringify(data) }],
 				};
 			},
 		);
@@ -100,8 +107,11 @@ const privateHandler = {
 				},
 			},
 			async ({ query, category }) => {
+				const data = await searchProducts(env.DB, query, category);
+
 				return {
-					content: [{ type: 'text', text: 'Not implemented' }],
+					content: [{ type: 'text', text: `Found ${data.length} products. ${JSON.stringify(data)}` }],
+					structuredContent: { products: data },
 				};
 			},
 		);
@@ -123,18 +133,28 @@ const privateHandler = {
 				},
 			},
 			async ({ productId }) => {
+				const product = await getProductById(env.DB, productId);
+				if (!product) {
+					return {
+						content: [{ type: 'text', text: 'Product not found!' }],
+						isError: true,
+					};
+				}
+				const productReviews = await getReviewsByProductId(env.DB, productId);
+
 				return {
-					content: [{ type: 'text', text: 'Not implemented' }],
+					content: [{ type: 'text', text: `Product Details: ${JSON.stringify(products)} showing ${productReviews.length}` }],
+					structuredContent: { product, reviews: productReviews },
 				};
 			},
 		);
 
-		// Tool: Add to Cart (model + app, no UI)
+		// Tool: Modify Cart (model + app, no UI)
 		server.registerTool(
-			'add-to-cart',
+			'modify-cart',
 			{
-				title: 'Add to Cart',
-				description: 'Add a product to the shopping cart. Use search-products first to find the product ID.',
+				title: 'Modify Cart',
+				description: 'Add or Remove a product to the shopping cart. Use search-products first to find the product ID.',
 				inputSchema: {
 					productId: z.string().describe('Product ID to add'),
 					quantity: z.number().int().default(1).describe('Quantity to add (negative to decrement)'),
@@ -144,28 +164,11 @@ const privateHandler = {
 				},
 			},
 			async ({ productId, quantity }) => {
+				await modifyCart(env.DB, productId, props.email, quantity);
+				const cartProducts = await getCartProducts(env.DB, props.email);
 				return {
-					content: [{ type: 'text', text: 'Not implemented' }],
-				};
-			},
-		);
-
-		// Tool: Remove from Cart (model + app, no UI)
-		server.registerTool(
-			'remove-from-cart',
-			{
-				title: 'Remove from Cart',
-				description: 'Remove a product from the shopping cart.',
-				inputSchema: {
-					productId: z.string().describe('Product ID to remove'),
-				},
-				_meta: {
-					ui: { visibility: ['model', 'app'] },
-				},
-			},
-			async ({ productId }) => {
-				return {
-					content: [{ type: 'text', text: 'Not implemented' }],
+					content: [{ type: 'text', text: `Added ${quantity} item(s) to cart. Cart is now ${cartProducts}.` }],
+					structuredContent: { cartItems: cartProducts },
 				};
 			},
 		);
@@ -187,8 +190,11 @@ const privateHandler = {
 				},
 			},
 			async () => {
+				const cartProducts = await getCartProducts(env.DB, props.email);
+				const subtotal = cartProducts.reduce((sum, item) => sum + item.price * item.quantity, 0);
 				return {
-					content: [{ type: 'text', text: 'Not implemented' }],
+					content: [{ type: 'text', text: `Cart has items ${cartProducts} a total of: ${subtotal}` }],
+					structuredContent: { cartItems: cartProducts, subtotal },
 				};
 			},
 		);
@@ -205,8 +211,23 @@ const privateHandler = {
 				},
 			},
 			async () => {
+				const cartProducts = await getCartProducts(env.DB, props.email);
+				if (cartProducts.length === 0) {
+					return {
+						content: [{ type: 'text', text: `Cart is empty` }],
+						isError: true,
+					};
+				}
+				const total = cartProducts.reduce((sum, item) => sum + item.price * item.quantity, 0);
+				await clearCart(env.DB, props.email);
+
 				return {
-					content: [{ type: 'text', text: 'Not implemented' }],
+					content: [{ type: 'text', text: `Order Placed. Total ${total}` }],
+					structuredContent: {
+						orderId: crypto.randomUUID(),
+						total,
+						cartItems: cartProducts,
+					},
 				};
 			},
 		);
@@ -244,6 +265,11 @@ const privateHandler = {
 const publicHandler = {
 	async fetch(request, env, ctx) {
 		const url = new URL(request.url);
+
+		if (url.pathname === '/seed') {
+			await seedProducts(env.DB);
+			return new Response('Seeded products successfully', { status: 200 });
+		}
 
 		if (url.pathname === '/authorize') {
 			if (request.method === 'GET') {
