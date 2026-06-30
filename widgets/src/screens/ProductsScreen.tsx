@@ -44,10 +44,10 @@ export function ProductsScreen({
                 <header className="flex items-center border-b border-white/10 pb-3 mb-4 gap-3">
                     <button
                         onClick={() => onNavigate("cart")}
-                        className="flex items-center gap-2 px-4 py-2 border border-white/10 rounded-lg bg-neutral-900 text-neutral-100 cursor-pointer"
+                        className="flex items-center gap-2 px-4 py-2 border border-white/10 rounded-lg bg-black text-white cursor-pointer"
                     >
                         <ShoppingCartIcon />
-                        <span className="text-white-500">Cart ({cartCount})</span>
+                        <span>Cart ({cartCount})</span>
                     </button>
                 </header>
 
