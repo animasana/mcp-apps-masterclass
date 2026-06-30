@@ -47,7 +47,7 @@ export function ProductsScreen({
                         className="flex items-center gap-2 px-4 py-2 border border-white/10 rounded-lg bg-neutral-900 text-neutral-100 cursor-pointer"
                     >
                         <ShoppingCartIcon />
-                        <span>Cart ({cartCount})</span>
+                        <span className="text-white-500">Cart ({cartCount})</span>
                     </button>
                 </header>
 
