@@ -1,28 +1,37 @@
-export interface Exercise {
-  name: string;
-  reps: number;
-  instructions: string;
-  searchKeyword: string;
-}
+export type NutritionFact = { label: string; value: string };
 
-export interface Workout {
-  id: string;
-  userId: string;
-  title: string;
-  description: string | null;
-  durationMinutes: number;
-  intervalSeconds: number;
-  exercises: Exercise[];
-  exerciseCount: number;
-  createdAt: string | null;
-}
+export type Product = {
+	id: string;
+	name: string;
+	price: number;
+	description: string;
+	shortDescription: string;
+	detailSummary: string;
+	nutritionFacts: NutritionFact[];
+	higlights: string[];
+	image: string;
+	category: string;
+};
 
-export interface WorkoutListItem {
-  id: string;
-  title: string;
-  description: string | null;
-  durationMinutes: number;
-  exerciseCount: number;
-}
+export type CartItem = {
+	id: string;
+	name: string;
+	price: number;
+	image: string;
+	quantity: number;
+};
 
-export type ToolOutput = { workout: Workout } | { workouts: WorkoutListItem[] };
+export type Order = {
+	orderId: string;
+	total: number;
+	cartItems: CartItem[];
+};
+
+export type Review = {
+	userId: string;
+	productId: string;
+	rating: number;
+	text: string;
+	fileId: string;
+	createdAt: number;
+};

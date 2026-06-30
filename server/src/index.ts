@@ -84,7 +84,7 @@ const privateHandler = {
 				const data = await searchProducts(env.DB, query, category);
 
 				return {
-					content: [{ type: 'text', text: JSON.stringify(data) }],
+					content: [{ type: 'text', text: JSON.stringify(data.map((p) => ({ id: p.id, name: p.name }))) }],
 				};
 			},
 		);
@@ -267,7 +267,7 @@ const publicHandler = {
 		const url = new URL(request.url);
 
 		if (url.pathname === '/seed') {
-			await seedProducts(env.DB);
+			// await seedProducts(env.DB);
 			return new Response('Seeded products successfully', { status: 200 });
 		}
 
