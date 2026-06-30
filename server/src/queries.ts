@@ -71,7 +71,7 @@ export async function getCartProducts(d1: D1Database, userId: string) {
 			quantity: cartItems.quantity,
 		})
 		.from(cartItems)
-		.innerJoin(products, eq(cartItems.id, products.id))
+		.innerJoin(products, eq(cartItems.productId, products.id))
 		.where(eq(cartItems.userId, userId));
 }
 
