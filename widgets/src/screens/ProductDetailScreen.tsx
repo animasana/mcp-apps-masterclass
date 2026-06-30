@@ -25,7 +25,9 @@ export function ProductDetailScreen({ app, hasProducts, selectedProduct, cart, s
 
 	const cartItem = cart.find((c) => c.id === selectedProduct.id);
 	const quantity = cartItem?.quantity ?? 0;
-	const { nutritionFacts, higlights } = selectedProduct;
+	// const { nutritionFacts, highlights } = selectedProduct;
+	const nutritionFacts = selectedProduct.nutritionFacts ?? [];
+	const highlights = selectedProduct.highlights ?? [];
 
 	return (
 		<div className="min-h-screen bg-black text-neutral-100">
@@ -56,7 +58,7 @@ export function ProductDetailScreen({ app, hasProducts, selectedProduct, cart, s
 							))}
 						</div>
 						<div className="text-sm text-white/50 leading-relaxed">
-							{higlights.map((item, index) => (
+							{highlights.map((item, index) => (
 								<p key={index} className="my-1">
 									• {item}
 								</p>
