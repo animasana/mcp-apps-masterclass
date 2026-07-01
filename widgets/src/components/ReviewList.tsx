@@ -27,7 +27,14 @@ export function ReviewList({ reviews }: Props) {
 							</span>)
 						}
 					</div>
-					{review.text && <p className="text-sm text-white/70 leading-relaxed">{review.text}</p>}
+					{review.text && (
+						<p className="text-sm text-white/70 leading-relaxed">
+							{review.text}
+						</p>
+					)}
+					{review.fileId !== "" && (
+						<img src={`https://ecommerce-server.oogy.workers.dev/banana/${review.fileId}`} className='size-16 object-cover rounded-lg mt-2' />
+					)}
 				</div>
 			))}
 		</div>

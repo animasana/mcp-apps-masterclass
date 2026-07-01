@@ -286,6 +286,19 @@ const publicHandler = {
 	async fetch(request, env, ctx) {
 		const url = new URL(request.url);
 
+		if (url.pathname.startsWith('/banana')) {
+			const key = url.pathname.replace('/banana/', '');
+			const object = await env.BUCKET.get(key);
+			if (!object) {
+				return new Response('image not found', { status: 404 });
+			}
+			return new Response(object.body, {
+				headers: {
+					'Content-Type': object.httpMetadata?.contentType ?? 'image/jpeg',
+				},
+			});
+		}
+
 		if (url.pathname === '/seed') {
 			// await seedProducts(env.DB);
 			return new Response('Seeded products successfully', { status: 200 });

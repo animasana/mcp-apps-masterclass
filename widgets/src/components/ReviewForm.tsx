@@ -50,6 +50,9 @@ export function ReviewForm({ app, productId, onSubmitted }: Props) {
             });
             if (result.structuredContent) {
                 onSubmitted(result.structuredContent.reviews as Review[]);
+                setImageUrl(null);
+                setText('');
+                setRating(0);
             }
         } finally {
             setIsPending(false);
