@@ -39,7 +39,7 @@ export function ProductsScreen({
     const cartCount = cart.reduce((sum, item) => sum + item.quantity, 0);
 
     return (
-        <div className="min-h-screen bg-black text-neutral-100">
+        <div className="min-h-screen bg-black text-white">
             <div className="max-w-7xl mx-auto p-5">
                 <header className="flex items-center border-b border-white/10 pb-3 mb-4 gap-3">
                     <button

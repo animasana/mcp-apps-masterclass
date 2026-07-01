@@ -26,7 +26,7 @@ export function ProductCard({ app, item, cart, setCart, onSelect }: ProductCardP
 				<img src={item.image} alt={item.name} className="w-full h-60 object-cover" />
 			</div>
 			<div className="px-4 pt-3 pb-4">
-				<p className="text-base font-semibold text-neutral-100">{item.name}</p>
+				<p className="text-base font-semibold text-white">{item.name}</p>
 				<p className="text-sm text-white/60 my-1">{formatPrice(item.price)}</p>
 				<p className="text-sm text-white/40 my-2">{item.shortDescription}</p>
 				<div className="flex items-center gap-2">

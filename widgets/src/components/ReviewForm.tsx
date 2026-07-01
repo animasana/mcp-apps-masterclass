@@ -58,16 +58,14 @@ export function ReviewForm({ app, productId, onSubmitted }: Props) {
 
     return (
         <div className="flex flex-col gap-3">
-            <h4 className="text-sm font-medium text-neutral-100">
-                Write a review
-            </h4>
+            <h4 className="text-sm font-medium text-white">Write a review</h4>
             <StarRating rating={rating} onRate={setRating} />
             <textarea
                 value={text}
                 onChange={(e) => setText(e.target.value)}
                 placeholder="Share your experience..."
                 rows={3}
-                className="bg-neutral-900 border border-white/10 rounded-xl px-3 py-2 text-sm text-neutral-100 placeholder:text-white/30 resize-none outline-none focus:border-white/20"
+                className="bg-neutral-900 border border-white/10 rounded-xl px-3 py-2 text-sm text-white placeholder:text-white/30 resize-none outline-none focus:border-white/20"
             />
             {imageUrl && (
                 <div className="relative w-20 h-20">

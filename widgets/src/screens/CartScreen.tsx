@@ -36,8 +36,8 @@ export function CartScreen({
                 arguments: {},
             });
             if (!result.isError) {
-				setLastOrder(result.structuredContent as Order);
-				setCart([]);
+                setLastOrder(result.structuredContent as Order);
+                setCart([]);
                 onNavigate("checkout-complete");
             }
         } finally {
@@ -76,7 +76,7 @@ export function CartScreen({
                                     className="w-16 h-16 object-cover rounded-xl"
                                 />
                                 <div className="flex-1">
-                                    <p className="text-sm font-medium text-neutral-100">
+                                    <p className="text-sm font-medium text-white">
                                         {item.name}
                                     </p>
                                     <p className="text-sm text-white/60 my-0.5">
@@ -97,7 +97,7 @@ export function CartScreen({
                                 <span className="text-sm text-white/60">
                                     Subtotal
                                 </span>
-                                <span className="text-neutral-100">
+                                <span className="text-white">
                                     {formatPrice(subtotal)}
                                 </span>
                             </div>
@@ -105,7 +105,7 @@ export function CartScreen({
                                 <span className="text-sm text-white/60">
                                     Total
                                 </span>
-                                <span className="font-semibold text-neutral-100">
+                                <span className="font-semibold text-white">
                                     {formatPrice(subtotal)}
                                 </span>
                             </div>

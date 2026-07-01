@@ -34,7 +34,7 @@ export function CheckoutCompleteScreen({ app, lastOrder, onNavigate }: Props) {
     };
 
     return (
-        <div className="min-h-screen bg-black text-neutral-100">
+        <div className="min-h-screen bg-black text-white">
             <div className="max-w-lg mx-auto px-5 py-10 text-center">
                 <div className="text-5xl mb-4">&#10003;</div>
                 <h2 className="text-xl mb-2">Order Confirmed</h2>
@@ -48,7 +48,7 @@ export function CheckoutCompleteScreen({ app, lastOrder, onNavigate }: Props) {
                     {supportsFileDownload && (
                         <button
                             onClick={handleDownloadReceipt}
-                            className="px-6 py-3 rounded-full border border-white/10 bg-neutral-900 text-neutral-100 text-sm font-medium cursor-pointer hover:bg-neutral-800 transition-colors"
+                            className="px-6 py-3 rounded-full border border-white/10 bg-neutral-900 text-white text-sm font-medium cursor-pointer hover:bg-neutral-800 transition-colors"
                         >
                             Download Receipt
                         </button>

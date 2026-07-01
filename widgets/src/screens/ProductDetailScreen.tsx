@@ -28,7 +28,7 @@ export function ProductDetailScreen({ app, hasProducts, selectedProduct, cart, s
 	const { nutritionFacts, highlights } = selectedProduct;
 
 	return (
-		<div className="min-h-screen bg-black text-neutral-100">
+		<div className="min-h-screen bg-black text-white">
 			<div className="max-w-7xl mx-auto p-5">
 				{hasProducts && <BackToProducts onClick={() => onNavigate('products')} />}
 				<div className="flex flex-col gap-4">
@@ -38,7 +38,7 @@ export function ProductDetailScreen({ app, hasProducts, selectedProduct, cart, s
 					<div className="flex flex-col gap-3">
 						<div className="flex justify-between items-start gap-4">
 							<div>
-								<h2 className="text-lg font-semibold text-neutral-100">{selectedProduct.name}</h2>
+								<h2 className="text-lg font-semibold text-white">{selectedProduct.name}</h2>
 								<p className="text-lg text-white/80">{formatPrice(selectedProduct.price)}</p>
 							</div>
 							{quantity > 0 && (
@@ -46,11 +46,11 @@ export function ProductDetailScreen({ app, hasProducts, selectedProduct, cart, s
 							)}
 						</div>
 						<p className="text-sm text-white/60 leading-relaxed">{selectedProduct.description}</p>
-						<p className="text-sm font-medium text-neutral-100">{selectedProduct.detailSummary}</p>
+						<p className="text-sm font-medium text-white">{selectedProduct.detailSummary}</p>
 						<div className="grid grid-cols-4 gap-3 bg-neutral-900 border border-white/10 rounded-2xl px-4 py-3 text-center">
 							{nutritionFacts.map((fact) => (
 								<div key={fact.label}>
-									<p className="text-base font-semibold text-neutral-100">{fact.value}</p>
+									<p className="text-base font-semibold text-white">{fact.value}</p>
 									<p className="text-xs text-white/50">{fact.label}</p>
 								</div>
 							))}
@@ -63,7 +63,7 @@ export function ProductDetailScreen({ app, hasProducts, selectedProduct, cart, s
 							))}
 						</div>
 						<div className="mt-4 border-t border-white/10 pt-4">
-							<h3 className="text-base font-semibold text-neutral-100 mb-3">Reviews ({reviews.length})</h3>
+							<h3 className="text-base font-semibold text-white mb-3">Reviews ({reviews.length})</h3>
 							<ReviewList reviews={reviews} />
 							<div className="mt-4">
 								<ReviewForm app={app} productId={selectedProduct.id} onSubmitted={setReviews} />
