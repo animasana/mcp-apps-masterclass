@@ -287,7 +287,7 @@ const publicHandler = {
 		const url = new URL(request.url);
 
 		if (url.pathname === '/seed') {
-			await seedProducts(env.DB);
+			// await seedProducts(env.DB);
 			return new Response('Seeded products successfully', { status: 200 });
 		}
 
