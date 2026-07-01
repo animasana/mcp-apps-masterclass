@@ -7,7 +7,7 @@ import { handleAuthorizeGet, handleAuthorizePost } from './lib/authorize';
 import { and, eq, like, or } from 'drizzle-orm';
 import { cartItems, products, reviews } from './schema';
 import { drizzle } from 'drizzle-orm/d1';
-import { clearCart, getCartProducts, getProductById, getReviewsByProductId, modifyCart, searchProducts } from './queries';
+import { clearCart, getCartProducts, getProductById, getReviewsByProductId, modifyCart, searchProducts, upsertReview } from './queries';
 import { seedProducts } from './seed';
 
 const WIDGET_URI = 'ui://ecommerce-widget';
@@ -249,8 +249,28 @@ const privateHandler = {
 				},
 			},
 			async ({ productId, rating, text, imageUrl }) => {
+				let imageKey: string | undefined;
+				if (imageUrl) {
+					const { ok, body, headers } = await fetch(imageUrl);
+					if (ok) {
+						const result = await env.BUCKET.put(`ecommerce/${crypto.randomUUID()}`, body, {
+							httpMetadata: {
+								contentType: headers.get('content-type') || 'image/jpeg',
+							},
+						});
+						imageKey = result.key;
+					}
+				}
+
+				await upsertReview(env.DB, props.email, productId, rating, text, imageKey);
+
+				const freshReviews = await getReviewsByProductId(env.DB, productId);
+
 				return {
-					content: [{ type: 'text', text: 'Not implemented' }],
+					content: [{ type: 'text', text: `Review submitted. Total reviews ${freshReviews.length}` }],
+					structuredContent: {
+						reviews: freshReviews,
+					},
 				};
 			},
 		);
@@ -267,7 +287,7 @@ const publicHandler = {
 		const url = new URL(request.url);
 
 		if (url.pathname === '/seed') {
-			// await seedProducts(env.DB);
+			await seedProducts(env.DB);
 			return new Response('Seeded products successfully', { status: 200 });
 		}
 

@@ -14,18 +14,18 @@
     "db:migrate:remote": "wrangler d1 migrations apply ecommerce_database --remote"
   },
   "devDependencies": {
-    "@cloudflare/vitest-pool-workers": "^0.16.20",
+    "@cloudflare/vitest-pool-workers": "^0.17.0",
     "@types/node": "^26.0.1",
     "drizzle-kit": "^0.31.10",
     "typescript": "^6.0.3",
     "vitest": "~4.1.9",
-    "wrangler": "^4.105.0"
+    "wrangler": "^4.106.0"
   },
   "dependencies": {
     "@cloudflare/workers-oauth-provider": "^0.8.1",
     "@modelcontextprotocol/ext-apps": "^1.7.4",
     "@modelcontextprotocol/sdk": "^1.29.0",
-    "agents": "^0.17.1",
+    "agents": "^0.17.3",
     "drizzle-orm": "^0.45.2",
     "zod": "^4.4.3"
   }

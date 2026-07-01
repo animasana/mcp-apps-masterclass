@@ -1,7 +1,7 @@
 {
   "version": "6",
   "dialect": "sqlite",
-  "id": "c00ff901-0869-459b-acff-d433dd201931",
+  "id": "215abe29-6636-41a0-959a-b703057c3f39",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "tables": {
     "cart_items": {
@@ -187,7 +187,7 @@
           "primaryKey": false,
           "notNull": false,
           "autoincrement": false,
-          "default": "(current_timestamp)"
+          "default": "(unixepoch())"
         }
       },
       "indexes": {},

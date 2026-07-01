@@ -25,9 +25,7 @@ export function ProductDetailScreen({ app, hasProducts, selectedProduct, cart, s
 
 	const cartItem = cart.find((c) => c.id === selectedProduct.id);
 	const quantity = cartItem?.quantity ?? 0;
-	// const { nutritionFacts, highlights } = selectedProduct;
-	const nutritionFacts = selectedProduct.nutritionFacts ?? [];
-	const highlights = selectedProduct.highlights ?? [];
+	const { nutritionFacts, highlights } = selectedProduct;
 
 	return (
 		<div className="min-h-screen bg-black text-neutral-100">

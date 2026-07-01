@@ -26,7 +26,7 @@ CREATE TABLE `reviews` (
 	`rating` integer NOT NULL,
 	`text` text NOT NULL,
 	`file_id` text NOT NULL,
-	`created_at` integer DEFAULT (current_timestamp),
+	`created_at` integer DEFAULT (unixepoch()),
 	PRIMARY KEY(`product_id`, `user_id`),
 	FOREIGN KEY (`product_id`) REFERENCES `products`(`id`) ON UPDATE no action ON DELETE cascade,
 	CONSTRAINT "rating_1_5" CHECK("reviews"."rating" BETWEEN 1 AND 5)

@@ -33,5 +33,5 @@ export type Review = {
     rating: number;
     text: string;
     fileId: string;
-    createdAt: number;
+    createdAt: string | null;
 };

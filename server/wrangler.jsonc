@@ -20,7 +20,7 @@
 		{
 			"binding": "DB",
 			"database_name": "ecommerce_database",
-			"database_id": "cc8e0e4a-e2c1-45c1-a6b8-fc5f3e82f50f",
+			"database_id": "07667c4c-9e65-4590-a832-99d4480a5eca",
 			"remote": true,
 			"migrations_dir": "drizzle",
 		},
@@ -29,6 +29,13 @@
 		{
 			"binding": "OAUTH_KV",
 			"id": "3d3a193af1dc45df8c0a6503a3c53b90",
+			"remote": true,
+		},
+	],
+	"r2_buckets": [
+		{
+			"bucket_name": "ecommerce-assets",
+			"binding": "BUCKET",
 			"remote": true,
 		},
 	],
